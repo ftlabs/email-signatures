@@ -6,7 +6,9 @@
     "build-js": "mkdir -p build/scripts; rm -f build/scripts/*; find ./src/scripts -maxdepth 1 -name '*.js' -execdir browserify {} -d -t [ babelify  --sourceMapRelative . --presets [es2015] ] -o ../../build/scripts/{} ';'",
     "watch": "npm run build && sh -c 'nodemon -e js --watch src/scripts/ --exec \"npm run build-js\" & wait'",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npm run build-js"
+    "build": "npm run build-js",
+    "deploy": "npm run clean && cp -R ./src ./build && npm run build",
+    "clean": "rm -rf ./build"
   },
   "author": "FTLabs",
   "license": "MIT",
