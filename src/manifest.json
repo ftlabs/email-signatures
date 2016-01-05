@@ -6,12 +6,17 @@
   "version": "1.0",
 
   "browser_action": {
-    "default_icon": "icon.png"
+    "default_icon": "icon.png",
+    "default_popup": "dialog.html"
   },
   "content_scripts": [
     {
       "matches": ["https://mail.google.com/*"],
       "js": ["scripts/main.js"]
     }
-  ]
+  ],
+  "background": {
+    "scripts": ["scripts/storage.js"],
+    "persistent": true
+  }
 }

@@ -19,3 +19,15 @@ const watcher = new MutationObserver(function () {
 watcher.observe(document.body, {
 	childList: true
 });
+
+chrome.runtime.sendMessage({method: "getRSSLink"}, function(response) {
+	console.log("MainJS Response:", response);
+});
+
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+	console.log("MainJS Handler:", request);
+    if (request.method === "updateRSSLink"){
+		console.log("RSS Updated:", request.data);
+    }
+});
+
