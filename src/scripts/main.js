@@ -9,8 +9,12 @@ const watcher = new MutationObserver(function () {
 	const messageBodies = [...document.querySelectorAll('div[aria-label="Message Body"]:not([data-ftsig="1"])')];
 
 	messageBodies
-	.filter(message => !message.querySelector('div[href="http://ftsig"]'))
 	.forEach(function (message) {
+		const oldSig = message.querySelector('div[href="http://ftsig"]');
+		if (oldSig) {
+			oldSig.parentNode.removeChild(oldSig);
+		}
+		message.dataset.ftsig = "1";
 		const signature = document.createElement('div');
 		message.appendChild(signature);
 		signature.setAttribute('href', 'http://ftsig');
@@ -24,11 +28,18 @@ const watcher = new MutationObserver(function () {
 			throw Error('No information stored');
 		})
 		.then(data => fetch('https://ftlabs-email-signatures-server.herokuapp.com/sig?url=' + data.rss + "&max=" + data.amount))
-		.then(response => response.text())
+		.then(response => {
+			if (!response.ok) throw Error('Response not an okay status code. Status: ' + response.status);
+			return response.text();
+		})
 		.then(body => {
 			signature.appendChild(
 				document.createRange().createContextualFragment(body)
 			);
+		})
+		.catch(e => {
+			message.removeChild(signature);
+			throw e;
 		});
 	});
 
