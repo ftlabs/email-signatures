@@ -1,19 +1,16 @@
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 	console.log("StorageJS... Message Recieved:", request);
-    if (request.method === "getRSSLink"){
+    if (request.method === "getFormData"){
 		sendResponse({
-			data: localStorage.getItem('rssLink')
+			data: JSON.parse(localStorage.getItem('rssLink'))
 		});
-    } else if(request.method === "saveRSSLink"){
+    } else if(request.method === "saveFormData"){
 
     	if(request.data !== undefined){
-	    	localStorage.setItem('rssLink', request.data);
-	    	/*chrome.runtime.sendMessage({method: "updateRSSLink", data : request.data}, function(response){
-	    		//
-	    	});*/
+	    	localStorage.setItem('rssLink', JSON.stringify(request.data));
 
 			chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
-			    chrome.tabs.sendMessage(tabs[0].id, {method: "updateRSSLink", data: request.data}, function(response) {});  
+			    chrome.tabs.sendMessage(tabs[0].id, {method: "updateFormData", data: request.data}, function(response) {});  
 			});
     	}
 

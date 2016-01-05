@@ -18,8 +18,11 @@
 
 		input[type=url] {
 			font-size: 1em;
-			width: 100%;
 			padding: 3px 5px;
+		}
+
+		input:not([type=submit]){
+			width: 100%;			
 		}
 
 	</style>
@@ -30,6 +33,8 @@
 	<form>
 		<label for="rss">RSS Feed</label>
 		<input type="url" placeholder="Enter link" id="rss" >
+		<label for="amount">Number of articles</label>
+		<input type="range" min="1" max="10" value="3" id="amount">
 		<input type="submit" value="Save">
 	</form>
 

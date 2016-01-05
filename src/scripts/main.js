@@ -14,14 +14,16 @@ const watcher = new MutationObserver(function () {
 		const signature = document.createElement('div');
 		message.appendChild(signature);
 		signature.setAttribute('href', 'http://ftsig');
-		getRSS()
-		.then(url => {
-			if (url) {
-				return url;
+		getPopupInfo()
+		.then(data => {
+			console.log(data);
+			console.log('https://ftlabs-email-signatures-server.herokuapp.com/sig?url=' + data.rss + "&max=" + data.amount);
+			if (data) {
+				return data;
 			}
-			throw Error('No url defined');
+			throw Error('No information stored');
 		})
-		.then(url => fetch('https://ftlabs-email-signatures-server.herokuapp.com/sig?url=' + url))
+		.then(data => fetch('https://ftlabs-email-signatures-server.herokuapp.com/sig?url=' + data.rss + "&max=" + data.amount))
 		.then(response => response.text())
 		.then(body => {
 			signature.appendChild(
@@ -36,9 +38,9 @@ watcher.observe(document.body, {
 	childList: true
 });
 
-function getRSS() {
+function getPopupInfo() {
 	return new Promise(function (resolve) {
-		chrome.runtime.sendMessage({method: 'getRSSLink'}, function(response) {
+		chrome.runtime.sendMessage({method: 'getFormData'}, function(response) {
 			resolve(response.data);
 		});
 	});
@@ -47,7 +49,7 @@ function getRSS() {
 
 chrome.runtime.onMessage.addListener(function(request) {
 	console.log('MainJS Handler:', request);
-    if (request.method === 'updateRSSLink'){
+    if (request.method === 'updateFormData'){
 		console.log('RSS Updated:', request.data);
     }
 });
