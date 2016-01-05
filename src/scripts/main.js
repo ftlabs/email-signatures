@@ -3,7 +3,7 @@ const watcher = new MutationObserver(function () {
 	const messageBodies = [...document.querySelectorAll('div[aria-label="Message Body"]:not([data-ftsig="1"])')];
 
 	messageBodies
-	.filter(message => !message.querySelector('span.data-ftsig-content'))
+	.filter(message => !message.querySelector('div.data-ftsig-content'))
 	.forEach(function (message) {
 		const signature = document.createElement('div');
 		signature.classList.add('data-ftsig-content');
