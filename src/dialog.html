@@ -1,0 +1,72 @@
+<html>
+<head>
+		
+	<style>
+		
+		*{
+			box-sizing: border-box;
+		}
+
+		html{
+			background-color: #FFF1E0;
+		}
+
+		body{
+			min-width: 200px;
+			font-size: 16px;
+		}
+
+		label{
+		}
+
+		input{
+			margin-bottom: 10px;
+		}
+
+		input[type=url] {
+			font-size: 1em;
+			padding: 3px 5px;
+		}
+
+		input:not([type=submit]), select{
+			width: 100%;			
+		}
+
+	</style>
+	<!-- <link rel="stylesheet" href="//build.origami.ft.com/bundles/css?modules=o-forms@^2.0.0,o-buttons@^3.0.3" /> -->
+	<link rel="stylesheet" href="https://build.origami.ft.com/v1/bundles/css?modules=o-forms%402.0.0%2Co-buttons%403.0.3%2Co-autoinit%401.2.0&shrinkwrap=o-colors%403.3.0%2Co-grid%404.0.6%2Co-hoverable%403.0.0" />
+</head>
+<body>
+
+	<div class="o-forms-group">
+		<form>
+			<div class="o-forms-group">
+				<label class="o-forms-label"for="rss">RSS Feed</label>
+				<input class="o-forms-text" type="url" placeholder="Enter link" id="rss" ></input>
+			</div>
+			<div class="o-forms-group">
+				<label class="o-forms-label"for="amount">Number of articles</label>
+				<input type="range" min="1" max="10" value="3" id="amount"></input>
+			</div>
+			<div class="o-forms-group">
+				<label class="o-forms-label"for="theme">Styling Theme</label>
+				<select class="o-forms-select" id="theme">
+					<option value="none">None</option>
+					<option value="simple">Simple</option>
+					<option value="pink" selected>Pink</option>
+				</select>
+			</div>
+			<div class="o-forms-group">
+				<input class="o-forms-checkbox" type="checkbox" id="enabled" value="true" checked></input>
+				<label class="o-forms-label" for="enabled">Enabled</label>
+			</div>
+			<div class="o-forms-group">
+				<input class="o-buttons" type="submit" value="Save">
+			</div>
+		</form>
+	</div>
+
+<script src="scripts/popup.js"></script>
+
+</body>
+</html>
