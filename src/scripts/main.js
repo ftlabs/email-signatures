@@ -4,9 +4,9 @@
 // polyfill
 require('whatwg-fetch');
 
-const watcher = new MutationObserver(function () {
+function populateSignatures(force) {
 
-	const messageBodies = [...document.querySelectorAll('div[aria-label="Message Body"]:not([data-ftsig="1"])')];
+	const messageBodies = [...document.querySelectorAll('div[aria-label="Message Body"]' + (force ? '' : ':not([data-ftsig="1"])'))];
 
 	messageBodies
 	.forEach(function (message) {
@@ -36,7 +36,6 @@ const watcher = new MutationObserver(function () {
 		})
 		.then(body => {
 			if (oldSig) {
-				console.log('Removing Old Signature');
 				message.insertBefore(signature, oldSig);
 				message.removeChild(oldSig);
 			}
@@ -52,7 +51,9 @@ const watcher = new MutationObserver(function () {
 		});
 	});
 
-});
+}
+
+const watcher = new MutationObserver(populateSignatures);
 
 watcher.observe(document.body, {
 	childList: true
@@ -102,7 +103,7 @@ function getPopupInfo() {
 chrome.runtime.onMessage.addListener(function(request) {
 	console.log('MainJS Handler:', request);
     if (request.method === 'updateFormData'){
-		console.log('RSS Updated:', request.data);
+		populateSignatures(true);
     }
 });
 
