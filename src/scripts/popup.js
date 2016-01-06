@@ -9,6 +9,10 @@ function updateRange(amount){
 	amountLabel.textContent = `Number of articles (${amount})`;
 }
 
+function updateEnabled(isEnabled){
+	enabled.value = enabled.checked = (isEnabled === "true");
+}
+
 form.addEventListener('submit', function(e){
 
 	e.preventDefault();
@@ -20,15 +24,17 @@ form.addEventListener('submit', function(e){
 		s[el.id] = el.value;
 	});
 
+	console.log(s);
+
 	chrome.runtime.sendMessage({method: "saveFormData", data : s }, function(response) {
 		console.log("PopupJS... Response to saveFormData:", response);
 	});
 
 }, false);
 
-amountInput.oninput = function(e){
+amountInput.addEventListener('input', function(){
 	updateRange(this.value);
-};
+}, false);
 
 enabled.addEventListener('click', function(){
 
@@ -42,6 +48,14 @@ chrome.runtime.sendMessage({method: "getFormData"}, function(response) {
 	for(var key in response.data){
 		console.log(key, response.data[key]);
 		document.getElementById(key).value = response.data[key];
+		
+		if(key === "amount"){
+			updateRange(response.data[key]);
+		}
+
+		if(key === "enabled"){
+			updateEnabled(response.data[key]);
+		}
 
 	}
 
