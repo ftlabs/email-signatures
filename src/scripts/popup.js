@@ -9,6 +9,10 @@ function updateRange(amount){
 	amountLabel.textContent = `Number of articles (${amount})`;
 }
 
+function updateEnabled(isEnabled){
+	enabled.value = enabled.checked = (isEnabled === "true");
+}
+
 form.addEventListener('submit', function(e){
 
 	e.preventDefault();
@@ -44,6 +48,14 @@ chrome.runtime.sendMessage({method: "getFormData"}, function(response) {
 	for(var key in response.data){
 		console.log(key, response.data[key]);
 		document.getElementById(key).value = response.data[key];
+		
+		if(key === "amount"){
+			updateRange(response.data[key]);
+		}
+
+		if(key === "enabled"){
+			updateEnabled(response.data[key]);
+		}
 
 	}
 
