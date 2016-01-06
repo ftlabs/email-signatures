@@ -20,15 +20,17 @@ form.addEventListener('submit', function(e){
 		s[el.id] = el.value;
 	});
 
+	console.log(s);
+
 	chrome.runtime.sendMessage({method: "saveFormData", data : s }, function(response) {
 		console.log("PopupJS... Response to saveFormData:", response);
 	});
 
 }, false);
 
-amountInput.oninput = function(e){
+amountInput.addEventListener('input', function(){
 	updateRange(this.value);
-};
+}, false);
 
 enabled.addEventListener('click', function(){
 
