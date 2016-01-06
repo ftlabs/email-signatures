@@ -12,7 +12,7 @@ function populateSignatures(force) {
 	.forEach(function (message) {
 
 		// mark that this has a signature set
-		message.dataset.ftsig = "1";
+		message.dataset.ftsig = '1';
 
 		const spinner = new Spinner(message);
 		const signature = document.createElement('div');
@@ -29,7 +29,7 @@ function populateSignatures(force) {
 			}
 			throw Error('No information stored');
 		})
-		.then(data => fetch('https://ftlabs-email-signatures-server.herokuapp.com/sig?url=' + data.rss + "&max=" + data.amount))
+		.then(data => fetch(`https://ftlabs-email-signatures-server.herokuapp.com/sig?url=${encodeURIComponent(data.rss)}&max=${data.amount || 1}&theme=${data.theme || 'pink'}`))
 		.then(response => {
 			if (!response.ok) throw Error('Response not an okay status code. Status: ' + response.status);
 			return response.text();
