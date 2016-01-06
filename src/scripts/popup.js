@@ -60,5 +60,3 @@ chrome.runtime.sendMessage({method: "getFormData"}, function(response) {
 	}
 
 });
-
-updateRange(amountInput.value);

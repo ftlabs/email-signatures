@@ -29,25 +29,28 @@
 		}
 
 	</style>
-
+	<!-- <link rel="stylesheet" href="//build.origami.ft.com/bundles/css?modules=o-forms@^2.0.0" /> -->
+	<link rel="stylesheet" href="https://build.origami.ft.com/v1/bundles/css?modules=o-forms%402.0.0%2Co-autoinit%401.2.0&shrinkwrap=o-colors%403.3.0%2Co-grid%404.0.6" />
 </head>
 <body>
 
-	<form>
-		<label for="rss">RSS Feed</label>
-		<input type="url" placeholder="Enter link" id="rss" >
-		<label for="amount">Number of articles</label>
-		<input type="range" min="1" max="10" value="3" id="amount">
-		<label for="theme">Styling Theme</label>
-		<select id="theme">
-			<option value="none">None</option>
-			<option value="simple">Simple</option>
-			<option value="pink" selected>Pink</option>
-		</select>
-		<label for="enabled">Enabled?</label>
-		<input type="checkbox" id="enabled" value="true" checked>
-		<input type="submit" value="Save">
-	</form>
+	<div class="o-forms-group">
+		<form>
+			<label class="o-forms-label"for="rss">RSS Feed</label>
+			<input class="o-forms-text" type="url" placeholder="Enter link" id="rss" >
+			<label class="o-forms-label"for="amount">Number of articles</label>
+			<input type="range" min="1" max="10" value="3" id="amount">
+			<label class="o-forms-label"for="theme">Styling Theme</label>
+			<select class="o-forms-select" id="theme">
+				<option value="none">None</option>
+				<option value="simple">Simple</option>
+				<option value="pink" selected>Pink</option>
+			</select>
+			<label class="o-forms-label"for="enabled">Enabled?</label>
+			<input type="checkbox" id="enabled" value="true" checked>
+			<input type="submit" value="Save">
+		</form>
+	</div>
 
 <script src="scripts/popup.js"></script>
 
