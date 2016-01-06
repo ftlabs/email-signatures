@@ -6,7 +6,8 @@ require('whatwg-fetch');
 
 function populateSignatures(force) {
 
-	const messageBodies = [...document.querySelectorAll('div[aria-label="Message Body"]' + (force ? '' : ':not([data-ftsig="1"])'))];
+	const querySelector = 'div[aria-label="Message Body"]' + (force === true ? '' : ':not([data-ftsig="1"])');
+	const messageBodies = [...document.querySelectorAll(querySelector)];
 
 	messageBodies
 	.forEach(function (message) {
@@ -63,6 +64,7 @@ watcher.observe(document.body, {
 function Spinner(el) {
 
 	const spinner = document.createElement('span');
+	spinner.classList.add = 'ftsig-spinner';
 	spinner.style.color = 'white';
 	spinner.innerText = 'Loading Signature...';
 
@@ -101,7 +103,6 @@ function getPopupInfo() {
 
 
 chrome.runtime.onMessage.addListener(function(request) {
-	console.log('MainJS Handler:', request);
     if (request.method === 'updateFormData'){
 		populateSignatures(true);
     }
