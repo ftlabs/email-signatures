@@ -5,22 +5,46 @@ const amountLabel = document.querySelector('[for="amount"]');
 
 amountLabel.textContent = `Number of articles (${amountInput.value})`;
 
+function updateRange(amount){
+	amountLabel.textContent = `Number of articles (${amount})`;
+}
+
 form.addEventListener('submit', function(e){
 
 	e.preventDefault();
 
-	chrome.runtime.sendMessage({method: "saveFormData", data : { rss : rssInput.value, amount : amountInput.value} }, function(response) {
+	const valueElements = Array.from(form.querySelectorAll("input:not([type='submit']), select"));
+	let s = {};
+
+	valueElements.forEach(el => {
+		s[el.id] = el.value;
+	});
+
+	chrome.runtime.sendMessage({method: "saveFormData", data : s }, function(response) {
 		console.log("PopupJS... Response to saveFormData:", response);
 	});
 
 }, false);
 
 amountInput.oninput = function(e){
-	amountLabel.textContent = `Number of articles (${this.value})`;
+	updateRange(this.value);
 };
+
+enabled.addEventListener('click', function(){
+
+	this.value = this.checked;
+
+}, false);
 
 chrome.runtime.sendMessage({method: "getFormData"}, function(response) {
 	console.log("PopupJS... Response to getFormData:", response);
-	rssInput.value = response.data.rss;
-	amountInput.value = response.data.amount;
+
+	for(var key in response.data){
+		console.log(key, response.data[key]);
+		document.getElementById(key).value = response.data[key];
+
+	}
+
 });
+
+updateRange(amountInput.value);
