@@ -124,12 +124,12 @@ function getPopupInfo() {
 
 
 chrome.runtime.onMessage.addListener(function(request) {
-    if (request.method === 'updateFormData'){
-    	if(request.data.enabled === 'true'){
+	if (request.method === 'updateFormData'){
+		if(request.data.enabled === 'true'){
 			populateSignatures(true);		
-    	} else {
-    		clearSignatures();
-    	}
-    }
+		} else {
+			clearSignatures();
+		}
+	}
 });
 
