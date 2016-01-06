@@ -24,7 +24,8 @@ function populateSignatures(force) {
 		signature.setAttribute('href', 'http://ftsig');
 		getPopupInfo()
 		.then(data => {
-			if (data) {
+			if (data && data.enabled === 'true') {
+				console.log(data);
 				spinner.showSpinner();
 				return data;
 			}
@@ -83,7 +84,11 @@ function Spinner(el) {
 				header.appendChild(spinner);
 			},
 			removeSpinner() {
-				header.removeChild(spinner);
+				try{
+					header.removeChild(spinner);
+				} catch (e){
+
+				}
 			}
 		}
 	}
