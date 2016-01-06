@@ -12,6 +12,9 @@
 			font-size: 16px;
 		}
 
+		label{
+		}
+
 		input{
 			margin-bottom: 10px;
 		}
@@ -21,7 +24,7 @@
 			padding: 3px 5px;
 		}
 
-		input:not([type=submit]){
+		input:not([type=submit]), select{
 			width: 100%;			
 		}
 
@@ -35,6 +38,12 @@
 		<input type="url" placeholder="Enter link" id="rss" >
 		<label for="amount">Number of articles</label>
 		<input type="range" min="1" max="10" value="3" id="amount">
+		<label for="theme">Styling Theme</label>
+		<select id="theme">
+			<option value="none">None</option>
+			<option value="simple">Simple</option>
+			<option value="pink" selected>Pink</option>
+		</select>
 		<input type="submit" value="Save">
 	</form>
 
