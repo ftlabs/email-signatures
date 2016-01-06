@@ -14,21 +14,17 @@ const watcher = new MutationObserver(function () {
 		// mark that this has a signature set
 		message.dataset.ftsig = "1";
 
-
+		const spinner = new Spinner(message);
 		const signature = document.createElement('div');
 		const oldSig = message.querySelector(':scope > div[href="http://ftsig"]');
-		if (oldSig) {
-			message.insertBefore(signature, oldSig);
-			message.removeChild(oldSig);
-		} else {
+		if (!oldSig) {
 			message.appendChild(signature);
 		}
 		signature.setAttribute('href', 'http://ftsig');
 		getPopupInfo()
 		.then(data => {
-			console.log(data);
-			console.log('https://ftlabs-email-signatures-server.herokuapp.com/sig?url=' + data.rss + "&max=" + data.amount);
 			if (data) {
+				spinner.showSpinner();
 				return data;
 			}
 			throw Error('No information stored');
@@ -39,11 +35,18 @@ const watcher = new MutationObserver(function () {
 			return response.text();
 		})
 		.then(body => {
+			if (oldSig) {
+				console.log('Removing Old Signature');
+				message.insertBefore(signature, oldSig);
+				message.removeChild(oldSig);
+			}
 			signature.appendChild(
 				document.createRange().createContextualFragment(body)
 			);
+			spinner.removeSpinner();
 		})
 		.catch(e => {
+			spinner.removeSpinner();
 			message.removeChild(signature);
 			throw e;
 		});
@@ -54,6 +57,38 @@ const watcher = new MutationObserver(function () {
 watcher.observe(document.body, {
 	childList: true
 });
+
+
+function Spinner(el) {
+
+	const spinner = document.createElement('span');
+	spinner.style.color = 'white';
+	spinner.innerText = 'Loading Signature...';
+
+	let t = el;
+	let header;
+
+	while(t && t.parentNode && !(t.attributes.role && t.attributes.role.value === 'dialog')) {
+		t = t.parentNode;
+	}
+	if (t) {
+
+		// Find the first cell which is the header text
+		header = t.querySelector('table td');
+		return {
+			showSpinner() {
+				header.appendChild(spinner);
+			},
+			removeSpinner() {
+				header.removeChild(spinner);
+			}
+		}
+	}
+	return {
+		showSpinner() {},
+		removeSpinner() {},
+	}
+}
 
 function getPopupInfo() {
 	return new Promise(function (resolve) {
