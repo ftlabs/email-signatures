@@ -10,13 +10,19 @@ const watcher = new MutationObserver(function () {
 
 	messageBodies
 	.forEach(function (message) {
-		const oldSig = message.querySelector('div[href="http://ftsig"]');
-		if (oldSig) {
-			oldSig.parentNode.removeChild(oldSig);
-		}
+
+		// mark that this has a signature set
 		message.dataset.ftsig = "1";
+
+
 		const signature = document.createElement('div');
-		message.appendChild(signature);
+		const oldSig = message.querySelector(':scope > div[href="http://ftsig"]');
+		if (oldSig) {
+			message.insertBefore(signature, oldSig);
+			message.removeChild(oldSig);
+		} else {
+			message.appendChild(signature);
+		}
 		signature.setAttribute('href', 'http://ftsig');
 		getPopupInfo()
 		.then(data => {
