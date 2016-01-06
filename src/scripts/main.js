@@ -48,9 +48,25 @@ function populateSignatures(force) {
 		})
 		.catch(e => {
 			spinner.removeSpinner();
-			message.removeChild(signature);
+			try{
+				message.removeChild(signature);			
+			} catch(e){
+
+			}
 			throw e;
 		});
+	});
+
+}
+
+function clearSignatures(){
+
+	const existingEmailSigs = Array.from(document.querySelectorAll('[href="http://ftsig"]'));
+
+	console.log(existingEmailSigs);
+
+	existingEmailSigs.forEach(signature => {
+		signature.parentNode.removeChild(signature);
 	});
 
 }
@@ -109,7 +125,11 @@ function getPopupInfo() {
 
 chrome.runtime.onMessage.addListener(function(request) {
     if (request.method === 'updateFormData'){
-		populateSignatures(true);
+    	if(request.data.enabled === 'true'){
+			populateSignatures(true);		
+    	} else {
+    		clearSignatures();
+    	}
     }
 });
 
