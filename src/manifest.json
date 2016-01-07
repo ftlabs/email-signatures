@@ -3,7 +3,7 @@
 
   "name": "FTLabs GMail Signatures",
   "description": "A Chrome Extension that automagically adds links from RSS feeds to the end of emails sent in the Gmail web client",
-  "version": "1.0",
+  "version": "1.1.0",
 
   "browser_action": {
     "default_icon": "icon.png",
