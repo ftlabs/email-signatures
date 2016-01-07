@@ -4,7 +4,7 @@
 // polyfill
 require('whatwg-fetch');
 
-function populateSignatures(force) {
+function populateSignatures(data, force) {
 
 	const querySelector = 'div[aria-label="Message Body"]' + (force === true ? '' : ':not([data-ftsig="1"])');
 	const messageBodies = [...document.querySelectorAll(querySelector)];
@@ -22,10 +22,15 @@ function populateSignatures(force) {
 			message.appendChild(signature);
 		}
 		signature.setAttribute('href', 'http://ftsig');
-		getPopupInfo()
+		
+
+		Promise.resolve(data || getPopupInfo())
 		.then(data => {
-			if (data && data.enabled === 'true') {
-				console.log(data);
+			if (data) {
+				if (data.enabled !==  'true') {
+					throw Error('Extension Disabled');
+					if (oldSig) message.removeChild(oldSig);
+				}
 				spinner.showSpinner();
 				return data;
 			}
@@ -39,7 +44,6 @@ function populateSignatures(force) {
 		.then(body => {
 			if (oldSig) {
 				message.insertBefore(signature, oldSig);
-				message.removeChild(oldSig);
 			}
 			signature.appendChild(
 				document.createRange().createContextualFragment(body)
@@ -49,29 +53,20 @@ function populateSignatures(force) {
 		.catch(e => {
 			spinner.removeSpinner();
 			try{
-				message.removeChild(signature);			
-			} catch(e){
-
-			}
+				message.removeChild(signature);
+			} catch(e) {}
 			throw e;
+		})
+		.then(() => {
+			if (oldSig) {
+				message.removeChild(oldSig);
+			}
 		});
 	});
 
 }
 
-function clearSignatures(){
-
-	const existingEmailSigs = Array.from(document.querySelectorAll('[href="http://ftsig"]'));
-
-	console.log(existingEmailSigs);
-
-	existingEmailSigs.forEach(signature => {
-		signature.parentNode.removeChild(signature);
-	});
-
-}
-
-const watcher = new MutationObserver(populateSignatures);
+const watcher = new MutationObserver(() => populateSignatures());
 
 watcher.observe(document.body, {
 	childList: true
@@ -125,10 +120,9 @@ function getPopupInfo() {
 
 chrome.runtime.onMessage.addListener(function(request) {
 	if (request.method === 'updateFormData'){
+		console.log('Recieved new update data');
 		if(request.data.enabled === 'true'){
-			populateSignatures(true);		
-		} else {
-			clearSignatures();
+			populateSignatures(request.data, true);		
 		}
 	}
 });

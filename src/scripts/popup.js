@@ -15,23 +15,37 @@ function updateEnabled(isEnabled){
 	enabled.value = enabled.checked = (isEnabled === 'true');
 }
 
-form.addEventListener('submit', function(e){
-
-	e.preventDefault();
+function getData() {
 
 	const valueElements = Array.from(form.querySelectorAll('input:not([type="submit"]), select'));
-	const s = {};
+	const data = {};
 
 	valueElements.forEach(el => {
-		s[el.id] = el.value;
+		data[el.id] = el.value;
 	});
 
-	console.log(s);
+	return data;
+}
 
-	chrome.runtime.sendMessage({method: 'saveFormData', data : s }, function(response) {
-		console.log('PopupJS... Response to saveFormData:', response);
+justOnce.addEventListener('click', function (e) {
+	
+	e.preventDefault();
+	const data = getData();
+	data.enabled = 'true';
+
+	chrome.runtime.sendMessage({
+		method: 'updateWithoutSaving',
+		data
 	});
+});
 
+form.addEventListener('submit', function(e) {
+	
+	e.preventDefault();
+	chrome.runtime.sendMessage({
+		method: 'saveFormData',
+		data: getData()
+	});
 }, false);
 
 amountInput.addEventListener('input', function(){
@@ -47,7 +61,7 @@ enabled.addEventListener('click', function(){
 chrome.runtime.sendMessage({method: 'getFormData'}, function(response) {
 	console.log('PopupJS... Response to getFormData:', response);
 
-	for(const key in response.data){
+	for (const key in response.data) {
 		console.log(key, response.data[key]);
 		document.getElementById(key).value = response.data[key];
 		
@@ -60,5 +74,4 @@ chrome.runtime.sendMessage({method: 'getFormData'}, function(response) {
 		}
 
 	}
-
 });
