@@ -53,13 +53,24 @@
 	<div class="o-forms-group">
 		<form>
 			<div class="o-forms-group">
-				<label class="o-forms-label"for="rss">RSS Feed</label>
+				<label class="o-forms-label" for="rss">RSS Feed</label>
 				<input class="o-forms-text" type="url" placeholder="Enter link" id="rss" ></input>
 			</div>
 			<div class="o-forms-group">
 				<label class="o-forms-label"for="amount">Number of articles</label>
 				<input type="range" min="1" max="10" value="3" id="amount"></input>
 			</div>
+
+			<div class="o-forms-group">
+				<label class="o-forms-label">Content to include</label>
+
+				<input class="o-forms-checkbox" type="checkbox" id="include-headlines" value="true" checked></input>
+				<label class="o-forms-label" for="include-headlines">Headlines</label>
+				<input class="o-forms-checkbox" type="checkbox" id="include-description" value="true" checked></input>
+				<label class="o-forms-label" for="include-description">Description</label>
+				
+			</div>
+
 			<div class="o-forms-group">
 				<label class="o-forms-label"for="theme">Styling Theme</label>
 				<select class="o-forms-select" id="theme">
@@ -76,6 +87,7 @@
 			<div class="o-forms-group">
 				<input class="o-buttons" type="submit" value="Save"></input>
 			</div>
+
 		</form>
 	</div>
 
