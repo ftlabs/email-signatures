@@ -25,22 +25,18 @@ function populateSignatures(force) {
 		getPopupInfo()
 		.then(data => {
 			if (data && data.enabled === 'true') {
-				console.log(data);
+
 				spinner.showSpinner();
 
 				const ommissions = [];
 
 				for(const key in data){
 					
-					console.log(key, key.indexOf('include-'), data[key] === 'false');
-					debugger;
 					if(key.indexOf('include-') > -1 && data[key] === 'false'){
 						ommissions.push(key.replace('include-', ''));
 					}
 
 				}
-
-				console.log(`https://ftlabs-email-signatures-server.herokuapp.com/sig?url=${encodeURIComponent(data.rss)}&max=${data.amount || 1}&theme=${data.theme || 'pink'}&omit=${ommissions.join(",")}`);
 
 				return `https://ftlabs-email-signatures-server.herokuapp.com/sig?url=${encodeURIComponent(data.rss)}&max=${data.amount || 1}&theme=${data.theme || 'pink'}&omit=${ommissions.join(",")}`;
 
@@ -78,8 +74,6 @@ function populateSignatures(force) {
 function clearSignatures(){
 
 	const existingEmailSigs = Array.from(document.querySelectorAll('[href="http://ftsig"]'));
-
-	console.log(existingEmailSigs);
 
 	existingEmailSigs.forEach(signature => {
 		signature.parentNode.removeChild(signature);
