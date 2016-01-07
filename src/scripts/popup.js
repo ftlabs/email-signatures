@@ -1,5 +1,5 @@
 'use strict'; 
-/*global chrome, document, enabled */
+/*global chrome, document*/
 
 const form = document.getElementsByTagName('form')[0];
 const amountInput = document.querySelector('[id=amount]');
@@ -61,10 +61,6 @@ chrome.runtime.sendMessage({method: 'getFormData'}, function(response) {
 
 		if(key === 'amount'){
 			updateRange(response.data[key]);
-		}
-
-		if(key === 'enabled'){
-			updateEnabled(response.data[key]);
 		}
 
 	}

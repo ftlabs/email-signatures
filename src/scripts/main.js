@@ -27,11 +27,27 @@ function populateSignatures(force) {
 			if (data && data.enabled === 'true') {
 				console.log(data);
 				spinner.showSpinner();
-				return data;
+
+				const ommissions = [];
+
+				for(const key in data){
+					
+					console.log(key, key.indexOf('include-'), data[key] === 'false');
+					debugger;
+					if(key.indexOf('include-') > -1 && data[key] === 'false'){
+						ommissions.push(key.replace('include-', ''));
+					}
+
+				}
+
+				console.log(`https://ftlabs-email-signatures-server.herokuapp.com/sig?url=${encodeURIComponent(data.rss)}&max=${data.amount || 1}&theme=${data.theme || 'pink'}&omit=${ommissions.join(",")}`);
+
+				return `https://ftlabs-email-signatures-server.herokuapp.com/sig?url=${encodeURIComponent(data.rss)}&max=${data.amount || 1}&theme=${data.theme || 'pink'}&omit=${ommissions.join(",")}`;
+
 			}
 			throw Error('No information stored');
 		})
-		.then(data => fetch(`https://ftlabs-email-signatures-server.herokuapp.com/sig?url=${encodeURIComponent(data.rss)}&max=${data.amount || 1}&theme=${data.theme || 'pink'}`))
+		.then(url => fetch(url))
 		.then(response => {
 			if (!response.ok) throw Error('Response not an okay status code. Status: ' + response.status);
 			return response.text();
