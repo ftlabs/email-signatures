@@ -46,11 +46,6 @@ form.addEventListener('submit', function(e) {
 	e.preventDefault();
 
 	chrome.runtime.sendMessage({
-		method: 'getClipboard',
-		data : getData()
-	});
-
-	chrome.runtime.sendMessage({
 		method: 'saveFormData',
 		data: getData()
 	});
@@ -63,11 +58,11 @@ amountInput.addEventListener('input', function(){
 copyToClipboard.addEventListener('click', function(e){
 
 	e.preventDefault();
-	console.log("CLICK");
+
 	if(this.getAttribute('data-clickable') === 'false'){
 		return;
 	}
-	console.log("NOT DISABLED");
+
 	chrome.runtime.sendMessage({
 		method: 'getClipboard',
 		data: getData()
@@ -113,10 +108,10 @@ chrome.runtime.onMessage.addListener(function(request) {
 		window.getSelection().addRange(range);
 		document.execCommand('copy');
 		window.getSelection().removeAllRanges();
-		copyToClipboard.setAttribute('data-clickable', 'true');
 		copyToClipboard.textContent = "HTML copied to Clipboard";
 
 		setTimeout(function(){
+			copyToClipboard.setAttribute('data-clickable', 'true');
 			copyToClipboard.textContent = "Copy HTML to Clipboard";
 		}, 2500);
 

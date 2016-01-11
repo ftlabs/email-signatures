@@ -55,13 +55,13 @@ function populateSignatures(data, force) {
 		}
 		signature.setAttribute('href', 'http://ftsig');
 		
-
 		Promise.resolve(data || getPopupInfo())
 		.then(data => {
+			debugger;
 			if (data) {
 				if (data.enabled !== 'true') {
-					throw Error('Extension Disabled');
 					if (oldSig) message.removeChild(oldSig);
+					throw Error('Extension Disabled');
 				}
 				spinner.showSpinner();
 				return data;
@@ -152,9 +152,7 @@ chrome.runtime.onMessage.addListener(function(request) {
 
 	if (request.method === 'updateFormData'){
 
-		if(request.data.enabled === 'true'){
-			populateSignatures(request.data, true);		
-		}
+		populateSignatures(request.data, true);
 
 	}
 
