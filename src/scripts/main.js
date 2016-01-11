@@ -150,8 +150,6 @@ function getPopupInfo() {
 
 chrome.runtime.onMessage.addListener(function(request) {
 
-	console.log(request.method);
-
 	if (request.method === 'updateFormData'){
 
 		if(request.data.enabled === 'true'){
