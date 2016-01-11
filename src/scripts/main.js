@@ -4,6 +4,38 @@
 // polyfill
 require('whatwg-fetch');
 
+function getRSSHTML(data){
+
+	return new Promise(function(resolve, reject){
+
+			if (data) {
+			
+				const ommissions = [];
+
+				for(const key in data){
+					
+					if(key.indexOf('include-') > -1 && data[key] === 'false'){
+						ommissions.push(key.replace('include-', ''));
+					}
+
+				}
+
+				 resolve(`https://ftlabs-email-signatures-server.herokuapp.com/sig?url=${encodeURIComponent(data.rss)}&max=${data.amount || 1}&theme=${data.theme || 'pink'}&omit=${ommissions.join(",")}`);
+
+			} else {
+				reject("No data was passed");
+			}
+
+		})
+		.then(url => fetch(url))
+		.then(response => {
+			if (!response.ok) throw Error('Response not an okay status code. Status: ' + response.status);
+			return response.text();
+		})
+	;
+
+}
+
 function populateSignatures(data, force) {
 
 	const querySelector = 'div[aria-label="Message Body"]' + (force === true ? '' : ':not([data-ftsig="1"])');
@@ -27,32 +59,17 @@ function populateSignatures(data, force) {
 		Promise.resolve(data || getPopupInfo())
 		.then(data => {
 			if (data) {
-				if (data.enabled !==  'true') {
+				if (data.enabled !== 'true') {
 					throw Error('Extension Disabled');
 					if (oldSig) message.removeChild(oldSig);
 				}
 				spinner.showSpinner();
-
-				const ommissions = [];
-
-				for(const key in data){
-					
-					if(key.indexOf('include-') > -1 && data[key] === 'false'){
-						ommissions.push(key.replace('include-', ''));
-					}
-
-				}
-
-				return `https://ftlabs-email-signatures-server.herokuapp.com/sig?url=${encodeURIComponent(data.rss)}&max=${data.amount || 1}&theme=${data.theme || 'pink'}&omit=${ommissions.join(",")}`;
-
+				return data;
+			} else {
+				throw Error('No information stored');			
 			}
-			throw Error('No information stored');
 		})
-		.then(url => fetch(url))
-		.then(response => {
-			if (!response.ok) throw Error('Response not an okay status code. Status: ' + response.status);
-			return response.text();
-		})
+		.then(data => getRSSHTML(data))
 		.then(body => {
 			if (oldSig) {
 				message.insertBefore(signature, oldSig);
@@ -132,10 +149,24 @@ function getPopupInfo() {
 
 
 chrome.runtime.onMessage.addListener(function(request) {
+
+	console.log(request.method);
+
 	if (request.method === 'updateFormData'){
+
 		if(request.data.enabled === 'true'){
 			populateSignatures(request.data, true);		
 		}
+
 	}
+
+	if(request.method === 'getClipboard'){
+		getRSSHTML(request.data)
+			.then(result => {
+				chrome.runtime.sendMessage({method: 'returnClipboardHTML', data : result});
+			})
+		;
+	}
+
 });
 

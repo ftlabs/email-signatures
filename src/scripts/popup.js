@@ -1,5 +1,5 @@
 'use strict'; 
-/*global chrome, document*/
+/*global window, chrome, document, justOnce, copyToClipboard, cbData*/
 
 const form = document.getElementsByTagName('form')[0];
 const amountInput = document.querySelector('[id=amount]');
@@ -44,6 +44,12 @@ justOnce.addEventListener('click', function (e) {
 form.addEventListener('submit', function(e) {
 	
 	e.preventDefault();
+
+	chrome.runtime.sendMessage({
+		method: 'getClipboard',
+		data : getData()
+	});
+
 	chrome.runtime.sendMessage({
 		method: 'saveFormData',
 		data: getData()
@@ -54,18 +60,34 @@ amountInput.addEventListener('input', function(){
 	updateRange(this.value);
 }, false);
 
+copyToClipboard.addEventListener('click', function(e){
+
+	e.preventDefault();
+	console.log("CLICK");
+	if(this.getAttribute('data-clickable') === 'false'){
+		return;
+	}
+	console.log("NOT DISABLED");
+	chrome.runtime.sendMessage({
+		method: 'getClipboard',
+		data: getData()
+	});
+
+	this.setAttribute('data-clickable', 'false');
+	this.textContent = 'Getting data...';
+
+}, false);
+
 Array.from(checkboxes).forEach(function(checkbox){
-	console.log(checkbox);
 	checkbox.addEventListener('click', function(){
 		this.value = this.checked;
 	}, false);
 });
 
 chrome.runtime.sendMessage({method: 'getFormData'}, function(response) {
-	console.log('PopupJS... Response to getFormData:', response);
 
 	for (const key in response.data) {
-		console.log(key, response.data[key]);
+
 		const el = document.getElementById(key);
 		el.value = response.data[key];
 		
@@ -79,3 +101,26 @@ chrome.runtime.sendMessage({method: 'getFormData'}, function(response) {
 
 	}
 });
+
+chrome.runtime.onMessage.addListener(function(request) {
+
+	if(request.method === 'returnClipboardHTML'){
+		// Clipboard Data
+		console.log(request.data);
+		cbData.innerHTML = request.data;
+		const range = document.createRange();  
+		range.selectNode(cbData);
+		window.getSelection().addRange(range);
+		document.execCommand('copy');
+		window.getSelection().removeAllRanges();
+		copyToClipboard.setAttribute('data-clickable', 'true');
+		copyToClipboard.textContent = "HTML copied to Clipboard";
+
+		setTimeout(function(){
+			copyToClipboard.textContent = "Copy HTML to Clipboard";
+		}, 2500);
+
+	}
+
+});
+

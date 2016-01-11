@@ -44,6 +44,25 @@
 			transform: rotateX(-90deg);
 		}
 
+		*[data-visible="false"]{
+			position: fixed;
+			top: 100%;
+			left: 100%;
+		}
+
+		*[data-clickable="false"]{
+			cursor: not-allowed;
+		}
+
+		#copyToClipboard{
+			position: fixed;
+		    right: 5px;
+		    bottom: 5px;
+		    font-size: 0.65em;
+		    text-decoration: none;
+		    color: rgba(0,0,0,.8);
+		}
+
 	</style>
 	<!-- <link rel="stylesheet" href="//build.origami.ft.com/bundles/css?modules=o-forms@^2.0.0,o-buttons@^3.0.3" /> -->
 	<link rel="stylesheet" href="https://build.origami.ft.com/v1/bundles/css?modules=o-forms%402.0.0%2Co-buttons%403.0.3%2Co-autoinit%401.2.0&shrinkwrap=o-colors%403.3.0%2Co-grid%404.0.6%2Co-hoverable%403.0.0" />
@@ -121,6 +140,8 @@
 			</div>
 
 		</form>
+		<a href="#" id="copyToClipboard" data-clickable="true">Copy HTML to Clipboard</a>
+		<textarea id="cbData" data-visible="false"></textarea>
 	</div>
 
 <script src="scripts/popup.js"></script>
