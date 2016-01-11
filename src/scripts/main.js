@@ -57,7 +57,7 @@ function populateSignatures(data, force) {
 		
 		Promise.resolve(data || getPopupInfo())
 		.then(data => {
-			debugger;
+
 			if (data) {
 				if (data.enabled !== 'true') {
 					if (oldSig) message.removeChild(oldSig);
