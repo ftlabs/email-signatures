@@ -68,31 +68,38 @@
 
 					<tr>
 						<td>
+							<input class="o-forms-checkbox" type="checkbox" id="include-heading" value="true" checked></input>
+							<label class="o-forms-label" for="include-heading">Heading</label>
+						</td>
+
+						<td>
 							<input class="o-forms-checkbox" type="checkbox" id="include-link" value="true" checked></input>
 							<label class="o-forms-label" for="include-link">Link</label>
-						</td>	
+						</td>
+
+					</tr>
+
+					<tr>
 
 						<td>
 							<input class="o-forms-checkbox" type="checkbox" id="include-title" value="true" checked></input>
 							<label class="o-forms-label" for="include-title">Title</label>
 						</td>
 
-					</tr>
-
-					<tr>
 						<td>
 							<input class="o-forms-checkbox" type="checkbox" id="include-author" value="true" checked></input>
 							<label class="o-forms-label" for="include-author">Author</label>
 						</td>
+
+					</tr>
+
+					<tr>
 
 						<td>
 							<input class="o-forms-checkbox" type="checkbox" id="include-humanDate" value="true" checked></input>
 							<label class="o-forms-label" for="include-humanDate">Date</label>
 						</td>
 
-					</tr>
-
-					<tr>
 						<td>
 							<input class="o-forms-checkbox" type="checkbox" id="include-description" value="true" checked></input>
 							<label class="o-forms-label" for="include-description">Description</label>
@@ -103,6 +110,15 @@
 
 			</div>
 
+			<div class="o-forms-group">
+				<label class="o-forms-label" for="size">Content Size</label>
+				<select class="o-forms-select" id="size">
+					<option value="small">Small</option>
+					<option value="medium">Medium</option>
+					<option value="full" selected>Full</option>
+				</select>
+			</div>
+			
 			<div class="o-forms-group">
 				<label class="o-forms-label"for="theme">Styling Theme</label>
 				<select class="o-forms-select" id="theme">

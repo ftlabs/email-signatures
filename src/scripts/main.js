@@ -27,7 +27,7 @@ function populateSignatures(data, force) {
 		Promise.resolve(data || getPopupInfo())
 		.then(data => {
 			if (data) {
-				if (data.enabled !==  'true') {
+				if (data.enabled !== 'true') {
 					throw Error('Extension Disabled');
 					if (oldSig) message.removeChild(oldSig);
 				}
@@ -43,7 +43,7 @@ function populateSignatures(data, force) {
 
 				}
 
-				return `https://ftlabs-email-signatures-server.herokuapp.com/sig?url=${encodeURIComponent(data.rss)}&max=${data.amount || 1}&theme=${data.theme || 'pink'}&omit=${ommissions.join(",")}`;
+				return `https://ftlabs-email-signatures-server.herokuapp.com/sig?url=${encodeURIComponent(data.rss)}&max=${data.amount || 1}&theme=${data.theme || 'pink'}&omit=${ommissions.join(",")}&size=${data.size}`;
 
 			}
 			throw Error('No information stored');
