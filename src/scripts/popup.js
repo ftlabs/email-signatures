@@ -1,5 +1,5 @@
 'use strict'; 
-/*global chrome, document*/
+/*global chrome, document, justOnce, theme, size*/
 
 const form = document.getElementsByTagName('form')[0];
 const amountInput = document.querySelector('[id=amount]');
@@ -41,6 +41,24 @@ justOnce.addEventListener('click', function (e) {
 	});
 });
 
+size.addEventListener('mousedown', function(e){
+	console.log(this.getAttribute('data-clickable'));
+	if(this.getAttribute('data-clickable') === 'false'){
+		e.preventDefault();
+	}
+
+}, false);
+
+theme.addEventListener('change', function(){
+	// console.log(this.value);
+	if(this.value === 'none'){	
+		size.setAttribute('data-clickable', 'false');
+	} else {
+		size.setAttribute('data-clickable', 'true');
+	}
+
+}, false);
+
 form.addEventListener('submit', function(e) {
 	
 	e.preventDefault();
@@ -75,6 +93,10 @@ chrome.runtime.sendMessage({method: 'getFormData'}, function(response) {
 
 		if(key === 'amount'){
 			updateRange(response.data[key]);
+		}
+
+		if(key === 'theme' && response.data[key] === 'none'){
+			size.setAttribute('data-clickable', 'false');
 		}
 
 	}

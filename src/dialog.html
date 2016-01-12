@@ -44,6 +44,11 @@
 			transform: rotateX(-90deg);
 		}
 
+		*[data-clickable="false"]{
+		    opacity: 0.3;
+		    cursor: not-allowed !important;
+		}
+
 	</style>
 	<!-- <link rel="stylesheet" href="//build.origami.ft.com/bundles/css?modules=o-forms@^2.0.0,o-buttons@^3.0.3" /> -->
 	<link rel="stylesheet" href="https://build.origami.ft.com/v1/bundles/css?modules=o-forms%402.0.0%2Co-buttons%403.0.3%2Co-autoinit%401.2.0&shrinkwrap=o-colors%403.3.0%2Co-grid%404.0.6%2Co-hoverable%403.0.0" />
@@ -112,7 +117,7 @@
 
 			<div class="o-forms-group">
 				<label class="o-forms-label" for="size">Content Size</label>
-				<select class="o-forms-select" id="size">
+				<select class="o-forms-select" id="size" data-clickable="true">
 					<option value="small">Small</option>
 					<option value="medium">Medium</option>
 					<option value="full" selected>Full</option>
