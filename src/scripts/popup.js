@@ -45,6 +45,7 @@ size.addEventListener('mousedown', function(e){
 
 	if(this.getAttribute('data-clickable') === 'false'){
 		e.preventDefault();
+		e.stopPropagation();
 	}
 
 }, false);
