@@ -4,6 +4,12 @@
 // polyfill
 require('whatwg-fetch');
 
+function findParentElementByAttribute(el, attr, value){
+
+	while ((el = el.parentElement) && el.getAttribute(attr) !== value);
+	return el;
+}
+
 function getRSSHTML(data){
 
 	return new Promise(function(resolve, reject){
@@ -45,7 +51,11 @@ function populateSignatures(data, force) {
 
 	messageBodies
 	.forEach(function (message) {
-
+		var parent = findParentElementByAttribute(message, 'role', 'dialog');
+		console.log(parent);
+		if(parent === null){
+			throw Error("Message is in a reply thread");
+		}
 		// mark that this has a signature set
 		message.dataset.ftsig = '1';
 
