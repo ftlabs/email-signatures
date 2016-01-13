@@ -42,7 +42,7 @@ justOnce.addEventListener('click', function (e) {
 });
 
 size.addEventListener('mousedown', function(e){
-	console.log(this.getAttribute('data-clickable'));
+
 	if(this.getAttribute('data-clickable') === 'false'){
 		e.preventDefault();
 	}
@@ -50,7 +50,7 @@ size.addEventListener('mousedown', function(e){
 }, false);
 
 theme.addEventListener('change', function(){
-	// console.log(this.value);
+
 	if(this.value === 'none'){	
 		size.setAttribute('data-clickable', 'false');
 	} else {
@@ -73,7 +73,7 @@ amountInput.addEventListener('input', function(){
 }, false);
 
 Array.from(checkboxes).forEach(function(checkbox){
-	console.log(checkbox);
+
 	checkbox.addEventListener('click', function(){
 		this.value = this.checked;
 	}, false);
