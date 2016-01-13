@@ -51,6 +51,25 @@
 		    cursor: not-allowed;
 		}
 
+		*[data-visible="false"]{
+			position: fixed;
+			top: 100%;
+			left: 100%;
+		}
+
+		#copyToClipboard{
+			position: fixed;
+			right: 5px;
+			bottom: 5px;
+			font-size: 0.65em;
+			text-decoration: none;
+			color: rgba(0,0,0,.8);
+			border: 0;
+			background: transparent;
+			cursor: pointer;
+			outline: none;
+		}
+
 	</style>
 </head>
 <body>
@@ -142,6 +161,8 @@
 			</div>
 
 		</form>
+		<button href="#" id="copyToClipboard" data-clickable="true">Copy HTML to Clipboard</button>
+		<textarea id="cbData" data-visible="false"></textarea>
 	</div>
 
 <script src="scripts/popup.js"></script>
