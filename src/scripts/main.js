@@ -4,6 +4,40 @@
 // polyfill
 require('whatwg-fetch');
 
+function getRSSHTML(data){
+
+	return new Promise(function(resolve, reject){
+
+			console.log(data);
+
+			if (data) {
+			
+				const ommissions = [];
+
+				for(const key in data){
+					
+					if(key.indexOf('include-') > -1 && data[key] === 'false'){
+						ommissions.push(key.replace('include-', ''));
+					}
+
+				}
+
+				 resolve(`https://ftlabs-email-signatures-server.herokuapp.com/sig?url=${encodeURIComponent(data.rss)}&max=${data.amount || 1}&theme=${data.theme || 'pink'}&omit=${ommissions.join(",")}&size=${data.size}`);
+
+			} else {
+				reject("No data was passed");
+			}
+
+		})
+		.then(url => fetch(url))
+		.then(response => {
+			if (!response.ok) throw Error('Response not an okay status code. Status: ' + response.status);
+			return response.text();
+		})
+	;
+
+}
+
 function populateSignatures(data, force) {
 
 	const querySelector = 'div[aria-label="Message Body"]' + (force === true ? '' : ':not([data-ftsig="1"])');
@@ -23,36 +57,23 @@ function populateSignatures(data, force) {
 		}
 		signature.setAttribute('href', 'http://ftsig');
 		
-
 		Promise.resolve(data || getPopupInfo())
 		.then(data => {
+
 			if (data) {
 				if (data.enabled !== 'true') {
-					throw Error('Extension Disabled');
+
 					if (oldSig) message.removeChild(oldSig);
+					throw Error('Extension Disabled');
 				}
 				spinner.showSpinner();
 
-				const ommissions = [];
-
-				for(const key in data){
-					
-					if(key.indexOf('include-') > -1 && data[key] === 'false'){
-						ommissions.push(key.replace('include-', ''));
-					}
-
-				}
-
-				return `https://ftlabs-email-signatures-server.herokuapp.com/sig?url=${encodeURIComponent(data.rss)}&max=${data.amount || 1}&theme=${data.theme || 'pink'}&omit=${ommissions.join(",")}&size=${data.size}`;
-
+				return data;
+			} else {
+				throw Error('No information stored');
 			}
-			throw Error('No information stored');
 		})
-		.then(url => fetch(url))
-		.then(response => {
-			if (!response.ok) throw Error('Response not an okay status code. Status: ' + response.status);
-			return response.text();
-		})
+		.then(data => getRSSHTML(data))
 		.then(body => {
 			if (oldSig) {
 				message.insertBefore(signature, oldSig);
@@ -63,6 +84,7 @@ function populateSignatures(data, force) {
 			spinner.removeSpinner();
 		})
 		.catch(e => {
+			console.log(e);
 			spinner.removeSpinner();
 			try{
 				message.removeChild(signature);
@@ -132,10 +154,20 @@ function getPopupInfo() {
 
 
 chrome.runtime.onMessage.addListener(function(request) {
+
 	if (request.method === 'updateFormData'){
-		if(request.data.enabled === 'true'){
-			populateSignatures(request.data, true);		
-		}
+
+		populateSignatures(request.data, true);
+
 	}
+
+	if(request.method === 'getClipboard'){
+		getRSSHTML(request.data)
+			.then(result => {
+				chrome.runtime.sendMessage({method: 'returnClipboardHTML', data : result});
+			})
+		;
+	}
+
 });
 

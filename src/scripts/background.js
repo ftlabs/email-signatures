@@ -25,5 +25,8 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 		if(request.data !== undefined) {
 			emitMessage('updateFormData', request.data);
 		}
+	} else {
+		console.log('Relaying request:', request);
+		emitMessage(request.method, request.data);
 	}
 });

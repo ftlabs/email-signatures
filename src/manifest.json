@@ -16,7 +16,7 @@
     }
   ],
   "background": {
-    "scripts": ["scripts/storage.js"],
+    "scripts": ["scripts/background.js"],
     "persistent": true
   }
 }
