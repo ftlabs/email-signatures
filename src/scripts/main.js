@@ -8,6 +8,8 @@ function getRSSHTML(data){
 
 	return new Promise(function(resolve, reject){
 
+			console.log(data);
+
 			if (data) {
 			
 				const ommissions = [];
@@ -65,16 +67,6 @@ function populateSignatures(data, force) {
 					throw Error('Extension Disabled');
 				}
 				spinner.showSpinner();
-				
-				const ommissions = [];
-
-				for(const key in data){
-					
-					if(key.indexOf('include-') > -1 && data[key] === 'false'){
-						ommissions.push(key.replace('include-', ''));
-					}
-
-				}
 
 				return data;
 			} else {
@@ -92,6 +84,7 @@ function populateSignatures(data, force) {
 			spinner.removeSpinner();
 		})
 		.catch(e => {
+			console.log(e);
 			spinner.removeSpinner();
 			try{
 				message.removeChild(signature);
