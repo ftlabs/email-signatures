@@ -1,6 +1,5 @@
 {
   "name": "ftlabs-email-signatures",
-  "version": "0.0.1",
   "description": "A Chrome Extension that automagically adds links from RSS feeds to the end of emails sent in the Gmail web client",
   "scripts": {
     "build-js": "mkdir -p build/scripts; rm -f build/scripts/*; find ./src/scripts -maxdepth 1 -name '*.js' -execdir browserify {} -t [ babelify  --sourceMapRelative . --presets [es2015] ] -o ../../build/scripts/{} ';'",

@@ -1,5 +1,5 @@
 'use strict'; 
-/*global window, chrome, document, justOnce, copyToClipboard, cbData*/
+/*global window, chrome, document, justOnce, theme, size, copyToClipboard, cbData*/
 
 const form = document.getElementsByTagName('form')[0];
 const amountInput = document.querySelector('[id=amount]');
@@ -40,6 +40,25 @@ justOnce.addEventListener('click', function (e) {
 		data
 	});
 });
+
+size.addEventListener('mousedown', function(e){
+
+	if(this.getAttribute('data-clickable') === 'false'){
+		e.preventDefault();
+		e.stopPropagation();
+	}
+
+}, false);
+
+theme.addEventListener('change', function(){
+
+	if(this.value === 'none'){	
+		size.setAttribute('data-clickable', 'false');
+	} else {
+		size.setAttribute('data-clickable', 'true');
+	}
+
+}, false);
 
 form.addEventListener('submit', function(e) {
 	
@@ -94,6 +113,10 @@ chrome.runtime.sendMessage({method: 'getFormData'}, function(response) {
 			updateRange(response.data[key]);
 		}
 
+		if(key === 'theme' && response.data[key] === 'none'){
+			size.setAttribute('data-clickable', 'false');
+		}
+
 	}
 });
 
@@ -108,11 +131,11 @@ chrome.runtime.onMessage.addListener(function(request) {
 		window.getSelection().addRange(range);
 		document.execCommand('copy');
 		window.getSelection().removeAllRanges();
-		copyToClipboard.textContent = "HTML copied to Clipboard";
-
+		copyToClipboard.textContent = 'HTML copied to Clipboard';
+		copyToClipboard.setAttribute('data-clickable', 'true');
+		
 		setTimeout(function(){
-			copyToClipboard.setAttribute('data-clickable', 'true');
-			copyToClipboard.textContent = "Copy HTML to Clipboard";
+			copyToClipboard.textContent = 'Copy HTML to Clipboard';
 		}, 2500);
 
 	}
