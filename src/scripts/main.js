@@ -20,7 +20,7 @@ function getRSSHTML(data){
 
 				}
 
-				 resolve(`https://ftlabs-email-signatures-server.herokuapp.com/sig?url=${encodeURIComponent(data.rss)}&max=${data.amount || 1}&theme=${data.theme || 'pink'}&omit=${ommissions.join(",")}`);
+				 resolve(`https://ftlabs-email-signatures-server.herokuapp.com/sig?url=${encodeURIComponent(data.rss)}&max=${data.amount || 1}&theme=${data.theme || 'pink'}&omit=${ommissions.join(",")}&size=${data.size}`);
 
 			} else {
 				reject("No data was passed");
@@ -60,13 +60,25 @@ function populateSignatures(data, force) {
 
 			if (data) {
 				if (data.enabled !== 'true') {
+
 					if (oldSig) message.removeChild(oldSig);
 					throw Error('Extension Disabled');
 				}
 				spinner.showSpinner();
+				
+				const ommissions = [];
+
+				for(const key in data){
+					
+					if(key.indexOf('include-') > -1 && data[key] === 'false'){
+						ommissions.push(key.replace('include-', ''));
+					}
+
+				}
+
 				return data;
 			} else {
-				throw Error('No information stored');			
+				throw Error('No information stored');
 			}
 		})
 		.then(data => getRSSHTML(data))
