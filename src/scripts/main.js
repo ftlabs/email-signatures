@@ -5,8 +5,12 @@
 require('whatwg-fetch');
 
 function findParentElementByAttribute(el, attr, value){
-
 	while ((el = el.parentElement) && el.getAttribute(attr) !== value);
+	return el;
+}
+
+function findParentElementByTag(el, tag){
+	while ( (el = el.parentElement) && el.nodeName.toLowerCase() !== tag) ;
 	return el;
 }
 
@@ -51,11 +55,53 @@ function populateSignatures(data, force) {
 
 	messageBodies
 	.forEach(function (message) {
-		var parent = findParentElementByAttribute(message, 'role', 'dialog');
-		console.log(parent);
+		const parent = findParentElementByAttribute(message, 'role', 'dialog');
+		// console.log(parent);
+
+		// If we're in a compose window, our message dialog has a parent with role="dialog" on the element
+		// The response dialogs in GMail do not have this parent with this attribute
+		// This weirdness is due to GMails obfuscated DOM-naming conventions
+		// We return false instead of throwing an error so we can still iterate through other elements
+		// the may be dialogs and treat them appropriately
+
 		if(parent === null){
-			throw Error("Message is in a reply thread");
+			console.log(message);
+			const containingElement = findParentElementByAttribute(message, 'class', 'iN');
+			const addAnywayApendee = containingElement.querySelector('.gU.OoRYyc:not([data-sig-pone-assigned="true"])');
+			console.log(addAnywayApendee);
+
+			if(addAnywayApendee === null){
+				return false;
+			}
+
+			const pOne = document.createElement('span');
+			pOne.textContent = 'Add RSS signature';
+			pOne.setAttribute('style', 'font-size: 0.5em; cursor: pointer; float: left; position: absolute; top: 0; height: 100%; display: flex; align-items: center;');
+			pOne.addEventListener('click', function(){
+
+				getPopupInfo()
+					.then(data => getRSSHTML(data))
+					.then(body => {
+
+						const oldAnywaySig = containingElement.querySelector('.ft-email-sig');
+						if(oldAnywaySig !== null){
+							oldAnywaySig.parentNode.removeChild(oldAnywaySig);							
+						}
+						const sig = document.createRange().createContextualFragment(body);
+						containingElement.querySelector('.editable[aria-label="Message Body"]').appendChild(sig);
+
+					})
+				;
+
+			}, false);
+
+			addAnywayApendee.appendChild(pOne);
+			addAnywayApendee.setAttribute('data-sig-pone-assigned', 'true');
+
+			return false;
+		
 		}
+		
 		// mark that this has a signature set
 		message.dataset.ftsig = '1';
 
