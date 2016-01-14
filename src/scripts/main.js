@@ -9,16 +9,9 @@ function findParentElementByAttribute(el, attr, value){
 	return el;
 }
 
-function findParentElementByTag(el, tag){
-	while ( (el = el.parentElement) && el.nodeName.toLowerCase() !== tag) ;
-	return el;
-}
-
 function getRSSHTML(data){
 
 	return new Promise(function(resolve, reject){
-
-			console.log(data);
 
 			if (data) {
 			
@@ -56,7 +49,6 @@ function populateSignatures(data, force) {
 	messageBodies
 	.forEach(function (message) {
 		const parent = findParentElementByAttribute(message, 'role', 'dialog');
-		// console.log(parent);
 
 		// If we're in a compose window, our message dialog has a parent with role="dialog" on the element
 		// The response dialogs in GMail do not have this parent with this attribute
@@ -65,10 +57,8 @@ function populateSignatures(data, force) {
 		// the may be dialogs and treat them appropriately
 
 		if(parent === null){
-			console.log(message);
 			const containingElement = findParentElementByAttribute(message, 'class', 'iN');
 			const addAnywayApendee = containingElement.querySelector('.gU.OoRYyc:not([data-sig-pone-assigned="true"])');
-			console.log(addAnywayApendee);
 
 			if(addAnywayApendee === null){
 				return false;
@@ -78,6 +68,8 @@ function populateSignatures(data, force) {
 			pOne.textContent = 'Add RSS signature';
 			pOne.setAttribute('style', 'font-size: 0.5em; cursor: pointer; float: left; position: absolute; top: 0; height: 100%; display: flex; align-items: center;');
 			pOne.addEventListener('click', function(){
+				this.style.opacity = 0.4;
+				this.textContent = 'Getting signature...';
 
 				getPopupInfo()
 					.then(data => getRSSHTML(data))
@@ -89,6 +81,9 @@ function populateSignatures(data, force) {
 						}
 						const sig = document.createRange().createContextualFragment(body);
 						containingElement.querySelector('.editable[aria-label="Message Body"]').appendChild(sig);
+
+						this.style.opacity = 1;
+						this.textContent = 'Add RSS signature';
 
 					})
 				;
