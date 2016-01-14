@@ -83,7 +83,7 @@ function populateSignatures(data, force) {
 						containingElement.querySelector('.editable[aria-label="Message Body"]').appendChild(sig);
 
 						this.style.opacity = 1;
-						this.textContent = 'Add RSS signature';
+						this.textContent = 'Refresh RSS signature';
 
 					})
 				;
