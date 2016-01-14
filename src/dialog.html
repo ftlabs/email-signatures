@@ -16,6 +16,8 @@
 		body{
 			min-width: 200px;
 			font-size: 16px;
+			margin-bottom: 0;
+			margin-top: 0;
 		}
 
 		label{
@@ -76,10 +78,17 @@
 
 	<div class="o-forms-group">
 		<form>
-			<div class="o-forms-group">
-				<label class="o-forms-label" for="rss">RSS Feed</label>
-				<input class="o-forms-text" type="url" placeholder="Enter link" id="rss" ></input>
+			
+			<div class="o-forms-wrapper rssInputMessage">
+				<div class="o-forms-message o-forms-message--error" data-visible="false">
+					<p>Please add an RSS link</p>
+				</div>
+				<div class="o-forms-group">
+					<label class="o-forms-label" for="rss">RSS Feed</label>
+					<input class="o-forms-text" type="url" placeholder="Enter link" id="rss" ></input>
+				</div>
 			</div>
+
 			<div class="o-forms-group">
 				<label class="o-forms-label"for="amount">Number of articles</label>
 				<input type="range" min="1" max="10" value="3" id="amount"></input>
