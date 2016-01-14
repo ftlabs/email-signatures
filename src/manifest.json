@@ -18,4 +18,5 @@
   "background": {
     "scripts": ["scripts/background.js"],
     "persistent": true
-  }3}0
+  }
+}
