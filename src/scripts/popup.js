@@ -6,6 +6,7 @@ const amountInput = document.querySelector('[id=amount]');
 const amountLabel = document.querySelector('[for="amount"]');
 
 const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+const emptyRSSMessage = document.querySelector('.rssInputMessage .o-forms-message--error');
 
 amountLabel.textContent = `Number of articles (${amountInput.value})`;
 
@@ -24,6 +25,13 @@ function getData() {
 
 	valueElements.forEach(el => {
 		data[el.id] = el.value;
+		if(el.id === 'rss' && el.value === ''){
+			emptyRSSMessage.setAttribute('data-visible', 'true');
+			emptyRSSMessage.parentNode.classList.add('o-forms-wrapper--error');
+		} else if(el.id === 'rss' && el.value !== ''){
+			emptyRSSMessage.setAttribute('data-visible', 'false');
+			emptyRSSMessage.parentNode.classList.remove('o-forms-wrapper--error');
+		}
 	});
 
 	return data;
