@@ -110,19 +110,23 @@ chrome.runtime.sendMessage({method: 'getFormData'}, function(response) {
 
 	for (const key in response.data) {
 
-		const el = document.getElementById(key);
-		el.value = response.data[key];
-		
-		if(el.type === 'checkbox'){
-			tickBox(el, response.data[key]);
-		}
+		if(response.data.hasOwnProperty(key)){
 
-		if(key === 'amount'){
-			updateRange(response.data[key]);
-		}
+			const el = document.getElementById(key);
+			el.value = response.data[key];
+			
+			if(el.type === 'checkbox'){
+				tickBox(el, response.data[key]);
+			}
 
-		if(key === 'theme' && response.data[key] === 'none'){
-			size.setAttribute('data-clickable', 'false');
+			if(key === 'amount'){
+				updateRange(response.data[key]);
+			}
+
+			if(key === 'theme' && response.data[key] === 'none'){
+				size.setAttribute('data-clickable', 'false');
+			}
+			
 		}
 
 	}
