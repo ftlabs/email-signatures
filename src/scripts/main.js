@@ -152,13 +152,6 @@ function populateSignatures(data, force) {
 	});
 }
 
-const watcher = new MutationObserver(() => populateSignatures());
-
-watcher.observe(document.body, {
-	childList: true
-});
-
-
 function Spinner(el) {
 
 	const spinner = document.createElement('span');
@@ -222,3 +215,36 @@ chrome.runtime.onMessage.addListener(function(request) {
 
 });
 
+const watcher = new MutationObserver(() => populateSignatures());
+
+watcher.observe(document.body, {
+	childList: true
+});
+
+// Check for and create default values 
+
+getPopupInfo()
+	.then(data => {
+		console.log(data);
+		if(data === null){
+
+			chrome.runtime.sendMessage({
+				method: 'saveFormData',
+				data: {
+					'amount': '3',
+					'enabled': 'true',
+					'include-author': 'true',
+					'include-description': 'true',
+					'include-heading': 'true',
+					'include-humanDate': 'true',
+					'include-link': 'true',
+					'include-title': 'true',
+					'rss': 'http://www.ft.com/rss/home/uk',
+					'size': 'full',
+					'theme': 'pink'
+				}
+			});
+
+		}
+	})
+;
