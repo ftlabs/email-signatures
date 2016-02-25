@@ -56,12 +56,17 @@ function populateSignatures(data, force) {
 		// We return false instead of throwing an error so we can still iterate through other elements
 		// the may be dialogs and treat them appropriately
 
-		if(parent === null){
+		if (parent === null) {
 			const containingElement = findParentElementByAttribute(message, 'class', 'iN');
+			if (!containingElement) {
+				return;
+			}
+
+			const sigTarget = containingElement.querySelector('.editable[aria-label="Message Body"]');
 			const addAnywayApendee = containingElement.querySelector('.gU.OoRYyc:not([data-sig-pone-assigned="true"])');
 
-			if(addAnywayApendee === null){
-				return false;
+			if (addAnywayApendee === null || sigTarget === null) {
+				return;
 			}
 
 			const pOne = document.createElement('span');
@@ -72,21 +77,27 @@ function populateSignatures(data, force) {
 				this.textContent = 'Getting signature...';
 
 				getPopupInfo()
-					.then(data => getRSSHTML(data))
-					.then(body => {
+				.then(data => getRSSHTML(data))
+				.then(body => {
 
-						const oldAnywaySig = containingElement.querySelector('.ft-email-sig');
-						if(oldAnywaySig !== null){
-							oldAnywaySig.parentNode.removeChild(oldAnywaySig);							
-						}
-						const sig = document.createRange().createContextualFragment(body);
-						containingElement.querySelector('.editable[aria-label="Message Body"]').appendChild(sig);
+					// Remove any old signatures
+					const oldSigs = [...containingElement.querySelectorAll('div[href="http://ftsig"]')];
+					oldSigs.forEach(oldSig => oldSig.parentNode.removeChild(oldSig));
 
-						this.style.opacity = 1;
-						this.textContent = 'Refresh RSS signature';
+					const signature = document.createElement('div');
+					signature.setAttribute('href', 'http://ftsig');
+					signature.innerHTML = body;
+					sigTarget.appendChild(signature);
 
-					})
-				;
+					this.style.opacity = 1;
+					this.textContent = 'Refresh RSS signature';
+
+					//insert before .gmail_extra
+
+				}, function () {
+					this.style.opacity = 1;
+					this.textContent = 'Refresh RSS signature';
+				});
 
 			}, false);
 
@@ -101,12 +112,13 @@ function populateSignatures(data, force) {
 		message.dataset.ftsig = '1';
 
 		const spinner = new Spinner(message);
+
+		const oldSigs = [...message.querySelectorAll('div[href="http://ftsig"]')];
+		const topLevelSig = message.querySelector(':scope > div[href="http://ftsig"]');
+		
 		const signature = document.createElement('div');
-		const oldSig = message.querySelector(':scope > div[href="http://ftsig"]');
-		if (!oldSig) {
-			message.appendChild(signature);
-		}
 		signature.setAttribute('href', 'http://ftsig');
+		message.appendChild(signature);
 		
 		Promise.resolve(data || getPopupInfo())
 		.then(data => {
@@ -114,7 +126,8 @@ function populateSignatures(data, force) {
 			if (data) {
 				if (data.enabled !== 'true') {
 
-					if (oldSig) message.removeChild(oldSig);
+					// Remove all of the old signatures
+					oldSigs.forEach(oldSig => oldSig.parentNode.removeChild(oldSig));
 					throw Error('Extension Disabled');
 				}
 				spinner.showSpinner();
@@ -126,8 +139,8 @@ function populateSignatures(data, force) {
 		})
 		.then(data => getRSSHTML(data))
 		.then(body => {
-			if (oldSig) {
-				message.insertBefore(signature, oldSig);
+			if (topLevelSig) {
+				message.insertBefore(signature, topLevelSig);
 			}
 			signature.appendChild(
 				document.createRange().createContextualFragment(body)
@@ -143,11 +156,7 @@ function populateSignatures(data, force) {
 			throw e;
 		})
 		.then(() => {
-			if (oldSig) {
-				try {
-					message.removeChild(oldSig);
-				} catch (e) {}
-			}
+			oldSigs.forEach(oldSig => oldSig.parentNode.removeChild(oldSig));
 		});
 	});
 }
