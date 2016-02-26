@@ -87,7 +87,7 @@ function populateSignatures(data, force) {
 					const signature = document.createElement('div');
 					signature.setAttribute('href', 'http://ftsig');
 					signature.innerHTML = body;
-					sigTarget.appendChild(signature);
+					sigTarget.insertBefore(signature, sigTarget.querySelector('.gmail_extra'));
 
 					this.style.opacity = 1;
 					this.textContent = 'Refresh RSS signature';
@@ -141,10 +141,10 @@ function populateSignatures(data, force) {
 		.then(body => {
 			if (topLevelSig) {
 				message.insertBefore(signature, topLevelSig);
+			} else {
+				message.insertBefore(signature, message.querySelector('.gmail_extra'));
 			}
-			signature.appendChild(
-				document.createRange().createContextualFragment(body)
-			);
+			signature.innerHTML = body;
 			spinner.removeSpinner();
 		})
 		.catch(e => {
