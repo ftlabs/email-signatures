@@ -59,14 +59,14 @@ function populateSignatures(data, force) {
 		if (parent === null) {
 			const containingElement = findParentElementByAttribute(message, 'class', 'iN');
 			if (!containingElement) {
-				return;
+				return false;
 			}
 
 			const sigTarget = containingElement.querySelector('.editable[aria-label="Message Body"]');
 			const addAnywayApendee = containingElement.querySelector('.gU.OoRYyc:not([data-sig-pone-assigned="true"])');
 
 			if (addAnywayApendee === null || sigTarget === null) {
-				return;
+				return false;
 			}
 
 			const pOne = document.createElement('span');
