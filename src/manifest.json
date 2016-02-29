@@ -15,9 +15,6 @@
       "js": ["scripts/main.js"]
     }
   ],
-  "permissions": [
-    "tabs"
-  ],
   "background": {
     "scripts": ["scripts/background.js"],
     "persistent": true
