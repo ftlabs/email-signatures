@@ -56,10 +56,24 @@ function populateSignatures(data, force) {
 	.forEach(function (message) {
 		const parent = findParentElementByAttribute(message, 'role', 'dialog');
 		
-		const submitButton = parent.querySelector("[id=':kq']");
+		const submitButton = parent.querySelector(".gU.Up");
 		
 		submitButton.addEventListener('click', function(){
-			new CustomEvent('oTracking.event', { detail: { category: 'email with FT Labs Gmail Signature', action: 'sent' }, bubbles: true})
+			
+			// Circumstances exist where a user can click send, and the email doesn't send
+			//  - such as forgetting to put a recipient in the dialog. So, when the send
+			// button is clicked, we wait 3 seconds, and see if there's a success dialog i
+			// somewhere in the page.
+			 			
+			setTimeout(function(){
+				const successDialog = document.querySelector("[role='alert'] .vh span[param]");
+				if (successDialog !== null){
+					// The email was sent, registering with o-tracking
+					new CustomEvent('oTracking.event', { detail: { category: 'email with FT Labs Gmail Signature', action: 'sent' }, bubbles: true});
+				}
+							
+			}, 3000);
+			
 		}, false);
 
 		// If we're in a compose window, our message dialog has a parent with role="dialog" on the element
