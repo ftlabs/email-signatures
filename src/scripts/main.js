@@ -3,7 +3,12 @@
 
 // polyfill
 require('whatwg-fetch');
-var oTracking = require('o-tracking');
+var oTracking = require('o-tracking').init({
+	server: 'https://spoor-api.ft.com/px.gif',
+	context: {
+		product: 'FTLabs Gmail Signatures'
+	}
+});
 
 function findParentElementByAttribute(el, attr, value){
 	while ((el = el.parentElement) && el.getAttribute(attr) !== value);
@@ -50,6 +55,12 @@ function populateSignatures(data, force) {
 	messageBodies
 	.forEach(function (message) {
 		const parent = findParentElementByAttribute(message, 'role', 'dialog');
+		
+		const submitButton = parent.querySelector("[id=':kq']");
+		
+		submitButton.addEventListener('click', function(){
+			new CustomEvent('oTracking.event', { detail: { category: 'email with FT Labs Gmail Signature', action: 'sent' }, bubbles: true})
+		}, false);
 
 		// If we're in a compose window, our message dialog has a parent with role="dialog" on the element
 		// The response dialogs in GMail do not have this parent with this attribute
@@ -60,7 +71,7 @@ function populateSignatures(data, force) {
 		if(parent === null){
 			const containingElement = findParentElementByAttribute(message, 'class', 'iN');
 			const addAnywayApendee = containingElement.querySelector('.gU.OoRYyc:not([data-sig-pone-assigned="true"])');
-
+			
 			if(addAnywayApendee === null){
 				return false;
 			}
