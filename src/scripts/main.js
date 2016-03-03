@@ -3,7 +3,7 @@
 
 // polyfill
 require('whatwg-fetch');
-var oTracking = require('o-tracking');
+const oTracking = require('o-tracking');
 
 function findParentElementByAttribute(el, attr, value){
 	while ((el = el.parentElement) && el.getAttribute(attr) !== value);
