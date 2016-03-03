@@ -3,7 +3,7 @@
 
 // polyfill
 require('whatwg-fetch');
-var oTracking = require('o-tracking').init({
+const oTracking = require('o-tracking').init({
 	server: 'https://spoor-api.ft.com/px.gif',
 	context: {
 		product: 'FTLabs Gmail Signatures'

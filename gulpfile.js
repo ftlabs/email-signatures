@@ -1,5 +1,4 @@
 const gulp = require('gulp');
-
 const obt = require('origami-build-tools');
 
 function buildFile(opts){
@@ -22,8 +21,4 @@ gulp.task('build', function() {
 	
 });
 
-gulp.task('verify', function() {
-	return obt.verify(gulp);
-});
-
-gulp.task('default', ['verify', 'build']);
+gulp.task('default', ['build']);
