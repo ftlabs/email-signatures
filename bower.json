@@ -1,0 +1,7 @@
+{
+	"name" : "FTLabs-Gmail-Signatures-Extension",
+	"dependencies": {
+		"o-tracking" : "^1.1.8"
+	}
+	
+}
