@@ -2,7 +2,7 @@
   "name": "ftlabs-email-signatures",
   "description": "A Chrome Extension that automagically adds links from RSS feeds to the end of emails sent in the Gmail web client",
    "scripts": {
-    "watch": "npm run build && sh -c 'nodemon -e js --watch src/scripts/ --exec \"npm run deploy\" & wait'",
+    "watch": "npm run build && sh -c 'nodemon -e js --watch src/scripts/ --exec \"npm run build\" & wait'",
     "test": "echo \"Error: no test specified\" && exit 1",
 	"build" : "npm run clean && cp -R ./src ./build && gulp build",
     "clean": "rm -rf ./build",
