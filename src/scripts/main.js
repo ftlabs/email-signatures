@@ -3,7 +3,12 @@
 
 // polyfill
 require('whatwg-fetch');
-const oTracking = require('o-tracking');
+const oTracking = require('o-tracking').init({
+	server: 'https://spoor-api.ft.com/px.gif',
+	context: {
+		product: 'FTLabs Gmail Signatures'
+	}
+});
 
 function findParentElementByAttribute(el, attr, value){
 	while ((el = el.parentElement) && el.getAttribute(attr) !== value);
@@ -50,6 +55,25 @@ function populateSignatures(data, force) {
 	messageBodies
 	.forEach(function (message) {
 		const parent = findParentElementByAttribute(message, 'role', 'dialog');
+		
+		const submitButton = parent.querySelector(".gU.Up");
+		
+		submitButton.addEventListener('click', function(){
+			
+			// Circumstances exist where a user can click send, and the email doesn't send
+			//  - such as forgetting to put a recipient in the dialog. So, when the send
+			// button is clicked, we wait 3 seconds, and see if there's a success dialog i
+			// somewhere in the page.
+			 			
+			setTimeout(function(){
+				const successDialog = document.querySelector("[role='alert'] .vh span[param]");
+				if (successDialog !== null){
+					// The email was sent, registering with o-tracking
+					oTracking.event({ detail: { category: 'A usr can send an email with an FT Labs Gmail Signature', action: 'sent' }, bubbles: true} );
+				}		
+			}, 3000);
+			
+		}, false);
 
 		// If we're in a compose window, our message dialog has a parent with role="dialog" on the element
 		// The response dialogs in GMail do not have this parent with this attribute
@@ -60,7 +84,6 @@ function populateSignatures(data, force) {
 		if(parent === null){
 			const containingElement = findParentElementByAttribute(message, 'class', 'iN');
 			const addAnywayApendee = containingElement.querySelector('.gU.OoRYyc:not([data-sig-pone-assigned="true"])');
-
 			if(addAnywayApendee === null){
 				return false;
 			}
