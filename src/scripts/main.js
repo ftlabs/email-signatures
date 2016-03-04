@@ -69,9 +69,8 @@ function populateSignatures(data, force) {
 				const successDialog = document.querySelector("[role='alert'] .vh span[param]");
 				if (successDialog !== null){
 					// The email was sent, registering with o-tracking
-					new CustomEvent('oTracking.event', { detail: { category: 'email with FT Labs Gmail Signature', action: 'sent' }, bubbles: true});
-				}
-							
+					oTracking.event({ detail: { category: 'A usr can send an email with an FT Labs Gmail Signature', action: 'sent' }, bubbles: true} );
+				}		
 			}, 3000);
 			
 		}, false);
