@@ -84,7 +84,6 @@ function populateSignatures(data, force) {
 		if(parent === null){
 			const containingElement = findParentElementByAttribute(message, 'class', 'iN');
 			const addAnywayApendee = containingElement.querySelector('.gU.OoRYyc:not([data-sig-pone-assigned="true"])');
-			
 			if(addAnywayApendee === null){
 				return false;
 			}
