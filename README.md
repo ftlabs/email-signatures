@@ -9,7 +9,7 @@
 - Clone the repository -- `git clone `
 - Change in repository directory -- `cd email-signatures`
 - Install the dependencies -- `npm install`
-- Build the extension -- `npm run deploy`
+- Build the extension -- `npm run build`
 - Open up Google Chrome at the URL `chrome://extensions`
 - Check the "Developer mode' checkbox
 - Click the button 'Load unpacked extension'
@@ -18,7 +18,7 @@
 
 ### Deploying to Chrome Webstore
 - Bump the version number within './src/manifest.json' accordingly
-- Build the extension -- `npm run deploy`
+- Build the extension -- `npm run build`
 - Zip up the contents of './build'
 - Open the [Chrome Web Store Developer Dashboard](https://chrome.google.com/webstore/developer/dashboard)
 - [View all items by the internal publisher](https://chrome.google.com/webstore/developer/dashboard/ua1f0874776e375813592dabc534e2d01)
