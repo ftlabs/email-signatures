@@ -4,7 +4,7 @@
    "scripts": {
     "watch": "npm run build && sh -c 'nodemon -e js --watch src/scripts/ --exec \"npm run build\" & wait'",
     "test": "echo \"Error: no test specified\" && exit 1",
-	"build" : "npm run clean && cp -R ./src ./build && gulp build",
+    "build" : "npm run clean && cp -R ./src ./build && gulp build",
     "clean": "rm -rf ./build",
     "postinstall": "bower install"
   },
